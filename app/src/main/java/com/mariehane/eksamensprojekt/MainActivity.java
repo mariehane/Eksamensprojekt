@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity {
 
-    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
+    public final static String EXTRA_SEED = "com.mycompany.myfirstapp.SEED";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startGame(getCurrentFocus());
             return true;
         }
 
@@ -43,13 +44,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     /**
-     * Called when the user clicks the Send button
+     * Called when the user clicks the Start button
      */
     public void startGame(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
+        Intent intent = new Intent(this, PlayActivity.class);
+        EditText editText = (EditText) findViewById(R.id.seed_input);
+        String seed = editText.getText().toString();
+        intent.putExtra(EXTRA_SEED, seed);
         startActivity(intent);
     }
 }

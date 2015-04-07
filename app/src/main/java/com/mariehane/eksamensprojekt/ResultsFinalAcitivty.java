@@ -1,24 +1,25 @@
 package com.mariehane.eksamensprojekt;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 
-public class DisplayMessageActivity extends ActionBarActivity {
+public class ResultsFinalAcitivty extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        setContentView(R.layout.activity_results_final_acitivty);
+    }
 
-        TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        textView.setText(message);
-        setContentView(textView);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_results_final_acitivty, menu);
+        return true;
     }
 
     @Override
