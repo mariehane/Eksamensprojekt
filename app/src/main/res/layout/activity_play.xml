@@ -9,11 +9,11 @@
     tools:context="com.mariehane.eksamensprojekt.PlayActivity">
 
     <TextView
-        android:text="@string/question_title"
+        android:text=" "
         android:textSize="25dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+        android:id="@+id/question_title" />
 
     <LinearLayout
         android:id="@+id/button_layout"
@@ -26,17 +26,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/button_nottheonion">
-            jsdkaldjaslka</ImageButton>
+            android:src="@drawable/button_nottheonion"
+            android:onClick="clickNotTheOnion"></ImageButton>
 
         <ImageButton
             android:id="@+id/button_theonion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/button_theonion">
-            dfajklfsdjfka
-        </ImageButton>
+            android:src="@drawable/button_theonion"
+            android:onClick="clickTheOnion"></ImageButton>
 
     </LinearLayout>
 

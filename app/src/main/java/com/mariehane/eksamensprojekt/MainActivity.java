@@ -8,10 +8,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.Random;
+
 
 public class MainActivity extends ActionBarActivity {
 
-    public final static String EXTRA_SEED = "com.mycompany.myfirstapp.SEED";
+    public final static String EXTRA_SEED = "com.mariehane.eksamensprojekt.SEED";
+    public final static String EXTRA_ROUND = "com.mariehane.eksamensprojekt.ROUND";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +39,6 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startGame(getCurrentFocus());
             return true;
         }
 
@@ -50,7 +52,41 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, PlayActivity.class);
         EditText editText = (EditText) findViewById(R.id.seed_input);
         String seed = editText.getText().toString();
+        if (seed.isEmpty()) {
+            seed = createSeed();
+        }
+        intent.putExtra(EXTRA_ROUND, 1);
         intent.putExtra(EXTRA_SEED, seed);
         startActivity(intent);
+    }
+
+    private String createSeed() {
+        switch (new Random().nextInt(12)) {
+            case 0:
+                return "alpha";
+            case 1:
+                return "beta";
+            case 2:
+                return "cupcake";
+            case 3:
+                return "donut";
+            case 4:
+                return "eclair";
+            case 5:
+                return "froyo";
+            case 6:
+                return "gingerbread";
+            case 7:
+                return "honeycomb";
+            case 8:
+                return "ice cream sandwich";
+            case 9:
+                return "jelly bean";
+            case 10:
+                return "kitkat";
+            case 11:
+                return "lollipop";
+        }
+        return null;
     }
 }
