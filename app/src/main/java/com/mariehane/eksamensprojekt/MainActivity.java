@@ -8,6 +8,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 
@@ -15,6 +19,8 @@ public class MainActivity extends ActionBarActivity {
 
     public final static String EXTRA_SEED = "com.mariehane.eksamensprojekt.SEED";
     public final static String EXTRA_ROUND = "com.mariehane.eksamensprojekt.ROUND";
+
+    private static final int SEEDS = 10006;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,40 +59,44 @@ public class MainActivity extends ActionBarActivity {
         EditText editText = (EditText) findViewById(R.id.seed_input);
         String seed = editText.getText().toString();
         if (seed.isEmpty()) {
-            seed = createSeed();
+            try {
+                seed = createSeed();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         intent.putExtra(EXTRA_ROUND, 1);
         intent.putExtra(EXTRA_SEED, seed);
         startActivity(intent);
     }
 
-    private String createSeed() {
-        switch (new Random().nextInt(12)) {
-            case 0:
-                return "alpha";
-            case 1:
-                return "beta";
-            case 2:
-                return "cupcake";
-            case 3:
-                return "donut";
-            case 4:
-                return "eclair";
-            case 5:
-                return "froyo";
-            case 6:
-                return "gingerbread";
-            case 7:
-                return "honeycomb";
-            case 8:
-                return "ice cream sandwich";
-            case 9:
-                return "jelly bean";
-            case 10:
-                return "kitkat";
-            case 11:
-                return "lollipop";
+    /**
+     * Returns a memorable english string to be used as a seed
+     */
+    private String createSeed() throws IOException {
+        InputStream file = getResources().openRawResource(R.raw.seeds);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
+        String seed = readLine(bufferedReader, new Random().nextInt(SEEDS));
+
+        bufferedReader.close();
+        file.close();
+
+        return seed;
+    }
+
+    /**
+     * Reads a specific line from a file (index starts from zero, so line 1 is lineNumber=0)
+     */
+    private String readLine(BufferedReader br, int lineNumber) {
+        try {
+            while (lineNumber > 0) {
+                lineNumber--;
+                br.readLine();
+            }
+            return br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 }
