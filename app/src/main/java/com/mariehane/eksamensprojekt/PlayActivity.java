@@ -6,20 +6,28 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 
 public class PlayActivity extends ActionBarActivity {
 
-    private final static String EXTRA_SEED = "com.mariehane.eksamensprojekt.SEED";
-    private final static String EXTRA_QUESTIONS = "com.mariehane.eksamensprojekt.QUESTIONS";
-    private final static String EXTRA_ANSWERS = "com.mariehane.eksamensprojekt.ANSWERS";
-    private final static String EXTRA_WINS = "com.mariehane.eksamensprojekt.WINS";
-
     /**
      * The total amount of rounds
      */
     private final static int ROUNDS = 15;
+    /**
+     * The amount of titles (lines) in the file titles_theonion.txt
+     */
+    private static final int TITLES_THEONION = 100;
+    /**
+     * The amount of titles (lines) in the file titles_nottheonion.txt
+     */
+    private static final int TITLES_NOTTHEONION = 100;
+
     private static final boolean ANSWER_THEONION = true;
     private static final boolean ANSWER_NOTTHEONION = false;
 
@@ -37,7 +45,7 @@ public class PlayActivity extends ActionBarActivity {
 
         // Get seed from MainActivity
         Bundle extras = getIntent().getExtras();
-        seed = extras.getString(EXTRA_SEED);
+        seed = extras.getString(Extras.SEED);
         r = new Random(seed.hashCode());
 
         round = 0;
@@ -52,20 +60,26 @@ public class PlayActivity extends ActionBarActivity {
         boolean answer = r.nextBoolean();
         answers[round] = answer;
 
-        if (answer == ANSWER_THEONION) {
-            questions[round] = "HEJ";
-        } else {
-            questions[round] = "hej med dig";
-        }
 
-        // Get question from reddit
-        // & 0xffffffffL;
+        try {
+            if (answer == ANSWER_THEONION) {
+                InputStream file = getResources().openRawResource(R.raw.titles_theonion);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
+                questions[round] = FileTools.readLine(bufferedReader, r.nextInt(TITLES_THEONION));
+            } else {
+                InputStream file = getResources().openRawResource(R.raw.titles_nottheonion);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
+                questions[round] = FileTools.readLine(bufferedReader, r.nextInt(TITLES_NOTTHEONION));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Update title question
         TextView question = (TextView) findViewById(R.id.question_title);
         question.setText(questions[round]);
 
-        setTitle("Round: " + Integer.toString(round + 1) + " Seed: " + seed);
+        setTitle("Round: " + Integer.toString(round + 1));
     }
 
 
@@ -75,10 +89,10 @@ public class PlayActivity extends ActionBarActivity {
         round++;
         if (round == ROUNDS) {
             Intent intent = new Intent(this, ResultsActivity.class);
-            intent.putExtra(EXTRA_SEED, seed);
-            intent.putExtra(EXTRA_QUESTIONS, questions);
-            intent.putExtra(EXTRA_ANSWERS, EXTRA_ANSWERS);
-            intent.putExtra(EXTRA_WINS, wins);
+            intent.putExtra(Extras.SEED, seed);
+            intent.putExtra(Extras.QUESTIONS, questions);
+            intent.putExtra(Extras.ANSWERS, answers);
+            intent.putExtra(Extras.WINS, wins);
             startActivity(intent);
         } else {
             updateQuestion();

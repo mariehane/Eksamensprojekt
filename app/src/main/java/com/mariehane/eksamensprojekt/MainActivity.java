@@ -17,9 +17,6 @@ import java.util.Random;
 
 public class MainActivity extends ActionBarActivity {
 
-    public final static String EXTRA_SEED = "com.mariehane.eksamensprojekt.SEED";
-    public final static String EXTRA_ROUND = "com.mariehane.eksamensprojekt.ROUND";
-
     private static final int SEEDS = 10006;
 
     @Override
@@ -65,8 +62,7 @@ public class MainActivity extends ActionBarActivity {
                 e.printStackTrace();
             }
         }
-        intent.putExtra(EXTRA_ROUND, 1);
-        intent.putExtra(EXTRA_SEED, seed);
+        intent.putExtra(Extras.SEED, seed);
         startActivity(intent);
     }
 
@@ -76,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
     private String createSeed() throws IOException {
         InputStream file = getResources().openRawResource(R.raw.seeds);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
-        String seed = readLine(bufferedReader, new Random().nextInt(SEEDS));
+        String seed = FileTools.readLine(bufferedReader, new Random().nextInt(SEEDS));
 
         bufferedReader.close();
         file.close();
@@ -84,19 +80,4 @@ public class MainActivity extends ActionBarActivity {
         return seed;
     }
 
-    /**
-     * Reads a specific line from a file (index starts from zero, so line 1 is lineNumber=0)
-     */
-    private String readLine(BufferedReader br, int lineNumber) {
-        try {
-            while (lineNumber > 0) {
-                lineNumber--;
-                br.readLine();
-            }
-            return br.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
