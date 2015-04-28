@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 
 public class ResultsActivity extends ActionBarActivity {
@@ -12,6 +13,41 @@ public class ResultsActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_results);
+
+        Bundle extras = getIntent().getExtras();
+        String seed = extras.getString(Extras.SEED);
+        String[] questions = extras.getStringArray(Extras.QUESTIONS);
+        boolean[] answers = extras.getBooleanArray(Extras.ANSWERS);
+        boolean[] wins = extras.getBooleanArray(Extras.WINS);
+
+        int totalWins = 0;
+        for (boolean win : wins) {
+            if (win) {
+                totalWins++;
+            }
+        }
+
+        TextView resultsText = (TextView) findViewById(R.id.results_text);
+        resultsText.append("Seed: " + seed + "\nCorrect: " + Integer.toString(totalWins) + "/15\n\n");
+        for (int i = 0; i < questions.length; i++) {
+            String question = questions[i];
+
+            String answer;
+            if (answers[i]) {
+                answer = "theonion";
+            } else {
+                answer = "nottheonion";
+            }
+
+            String winText;
+            if (wins[i]) {
+                winText = "correct";
+            } else {
+                winText = "wrong";
+            }
+
+            resultsText.append("\"" + question + "\"\nAnswer: " + answer + " (" + winText + ")\n\n");
+        }
     }
 
 

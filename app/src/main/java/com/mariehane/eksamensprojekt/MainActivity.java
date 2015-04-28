@@ -8,10 +8,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Random;
+
 
 public class MainActivity extends ActionBarActivity {
 
-    public final static String EXTRA_SEED = "com.mycompany.myfirstapp.SEED";
+    private static final int SEEDS = 10006;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,6 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startGame(getCurrentFocus());
             return true;
         }
 
@@ -50,7 +55,29 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = new Intent(this, PlayActivity.class);
         EditText editText = (EditText) findViewById(R.id.seed_input);
         String seed = editText.getText().toString();
-        intent.putExtra(EXTRA_SEED, seed);
+        if (seed.isEmpty()) {
+            try {
+                seed = createSeed();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        intent.putExtra(Extras.SEED, seed);
         startActivity(intent);
     }
+
+    /**
+     * Returns a memorable english string to be used as a seed
+     */
+    private String createSeed() throws IOException {
+        InputStream file = getResources().openRawResource(R.raw.seeds);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
+        String seed = FileTools.readLine(bufferedReader, new Random().nextInt(SEEDS));
+
+        bufferedReader.close();
+        file.close();
+
+        return seed;
+    }
+
 }

@@ -15,7 +15,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -34,10 +33,12 @@
         </activity>
         <activity
             android:name=".ResultsActivity"
-            android:label="@string/title_activity_results"></activity>
-        <activity
-            android:name=".ResultsFinalAcitivty"
-            android:label="@string/title_activity_results_final_acitivty"></activity>
+            android:label="@string/title_activity_results"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.mariehane.eksamensprojekt.MainActivity" />
     </application>
 
 </manifest>

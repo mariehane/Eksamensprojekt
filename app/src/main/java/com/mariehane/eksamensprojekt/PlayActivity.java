@@ -1,39 +1,109 @@
 package com.mariehane.eksamensprojekt;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Random;
 
 
 public class PlayActivity extends ActionBarActivity {
+
+    /**
+     * The total amount of rounds
+     */
+    private final static int ROUNDS = 15;
+    /**
+     * The amount of titles (lines) in the file titles_theonion.txt
+     */
+    private static final int TITLES_THEONION = 100;
+    /**
+     * The amount of titles (lines) in the file titles_nottheonion.txt
+     */
+    private static final int TITLES_NOTTHEONION = 100;
+
+    private static final boolean ANSWER_THEONION = true;
+    private static final boolean ANSWER_NOTTHEONION = false;
+
+    private String seed;
+    private Random r;
+    private int round;
+    private String[] questions = new String[ROUNDS];
+    private boolean[] answers = new boolean[ROUNDS];
+    private boolean[] wins = new boolean[ROUNDS];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
+
+        // Get seed from MainActivity
+        Bundle extras = getIntent().getExtras();
+        seed = extras.getString(Extras.SEED);
+        r = new Random(seed.hashCode());
+
+        round = 0;
+        updateQuestion();
     }
 
+    /**
+     * Gets a question from either /r/theonion or /r/nottheonion
+     * The title question is then set to this question.
+     */
+    private void updateQuestion() {
+        boolean answer = r.nextBoolean();
+        answers[round] = answer;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_play, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        try {
+            if (answer == ANSWER_THEONION) {
+                InputStream file = getResources().openRawResource(R.raw.titles_theonion);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
+                questions[round] = FileTools.readLine(bufferedReader, r.nextInt(TITLES_THEONION));
+            } else {
+                InputStream file = getResources().openRawResource(R.raw.titles_nottheonion);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file));
+                questions[round] = FileTools.readLine(bufferedReader, r.nextInt(TITLES_NOTTHEONION));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return super.onOptionsItemSelected(item);
+        // Update title question
+        TextView question = (TextView) findViewById(R.id.question_title);
+        question.setText(questions[round]);
+
+        setTitle("Round: " + Integer.toString(round + 1));
+    }
+
+
+    public void click(View view, boolean answer) {
+        wins[round] = answer == answers[round];
+
+        round++;
+        if (round == ROUNDS) {
+            Intent intent = new Intent(this, ResultsActivity.class);
+            intent.putExtra(Extras.SEED, seed);
+            intent.putExtra(Extras.QUESTIONS, questions);
+            intent.putExtra(Extras.ANSWERS, answers);
+            intent.putExtra(Extras.WINS, wins);
+            startActivity(intent);
+        } else {
+            updateQuestion();
+        }
+    }
+
+    public void clickTheOnion(View view) {
+        click(view, ANSWER_THEONION);
+    }
+
+    public void clickNotTheOnion(View view) {
+        click(view, ANSWER_NOTTHEONION);
     }
 }
