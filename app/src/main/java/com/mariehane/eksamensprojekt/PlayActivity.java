@@ -22,11 +22,11 @@ public class PlayActivity extends ActionBarActivity {
     /**
      * The amount of titles (lines) in the file titles_theonion.txt
      */
-    private static final int TITLES_THEONION = 100;
+    private static final int TITLES_THEONION = 8628;
     /**
      * The amount of titles (lines) in the file titles_nottheonion.txt
      */
-    private static final int TITLES_NOTTHEONION = 100;
+    private static final int TITLES_NOTTHEONION = 10010;
 
     private static final boolean ANSWER_THEONION = true;
     private static final boolean ANSWER_NOTTHEONION = false;
