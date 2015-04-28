@@ -46,7 +46,7 @@ public class ResultsActivity extends ActionBarActivity {
                 winText = "wrong";
             }
 
-            resultsText.append("\"" + question + "\"\nAnswer: " + answer + " (" + winText + ")\n\n");
+            resultsText.append("\"" + question + "\"\nActual answer: " + answer + " (you were " + winText + ")\n\n");
         }
     }
 

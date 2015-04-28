@@ -34,8 +34,15 @@ public class PlayActivity extends ActionBarActivity {
     private String seed;
     private Random r;
     private int round;
+
     private String[] questions = new String[ROUNDS];
+    /**
+     * The correct answers for the given questions
+     */
     private boolean[] answers = new boolean[ROUNDS];
+    /**
+     * Whether the player answered correct to the given question
+     */
     private boolean[] wins = new boolean[ROUNDS];
 
     @Override
