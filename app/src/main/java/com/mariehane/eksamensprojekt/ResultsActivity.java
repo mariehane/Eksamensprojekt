@@ -1,9 +1,14 @@
 package com.mariehane.eksamensprojekt;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 
@@ -29,27 +34,57 @@ public class ResultsActivity extends ActionBarActivity {
 
         TextView resultsText = (TextView) findViewById(R.id.results_text);
         resultsText.append("Seed: " + seed + "\nCorrect: " + Integer.toString(totalWins) + "/15\n\n");
+
+        TableLayout resultsTable = (TableLayout) findViewById(R.id.results_table);
+
         for (int i = 0; i < questions.length; i++) {
-            String question = questions[i];
+            TableRow row = new TableRow(this);
+            row.setOnClickListener(rowClickListener);
 
-            String answer;
-            if (answers[i]) {
-                answer = "theonion";
-            } else {
-                answer = "nottheonion";
-            }
-
-            String winText;
+            // Create correctIcon and add it to the row
+            ImageView correctIcon = new ImageView(getApplicationContext());
             if (wins[i]) {
-                winText = "correct";
+                correctIcon.setImageDrawable(getResources().getDrawable(R.drawable.correct_answer));
             } else {
-                winText = "wrong";
+                correctIcon.setImageDrawable(getResources().getDrawable(R.drawable.wrong_answer));
             }
+            // Scale it so there's enough room for the other items
+            //correctIcon.setLayoutParams(layoutParams);
+            row.addView(correctIcon);
 
-            resultsText.append("\"" + question + "\"\nActual answer: " + answer + " (you were " + winText + ")\n\n");
+            // Create titleText and add it to the row
+            TextView titleText = new TextView(getApplicationContext());
+            titleText.setText(questions[i] + "\nYour answer was: ");
+            if (answers[i]) {
+                titleText.append("theonion");
+            } else {
+                titleText.append("nottheonion");
+            }
+            // Scale it so there's enough room for the other items
+            //titleText.setLayoutParams(layoutParams);
+            row.addView(titleText);
+
+            // Create linkIcon and add it to the row
+            ImageView linkIcon = new ImageView(getApplicationContext());
+            linkIcon.setImageDrawable(getResources().getDrawable(R.drawable.link_icon));
+            // Scale it so there's enough room for the other items
+            //linkIcon.setLayoutParams(layoutParams);
+            row.addView(linkIcon);
+
+            // Add row to resultsTable
+            resultsTable.addView(row);
         }
     }
 
+    OnClickListener rowClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View view) {
+            TableRow row = (TableRow) view;
+            TextView titleText = (TextView) row.getChildAt(1);
+            System.out.println(titleText.getText());
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
